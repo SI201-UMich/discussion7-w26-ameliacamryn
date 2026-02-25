@@ -25,6 +25,15 @@ def load_listings(f):
                 - Values (str): Corresponding values from that row
                   (NOTE: All values are strings, including numbers, which means you will need to convert them in later functions)
     """
+    listings = []
+
+    with open(f, newline='', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            listings.append(dict(row))  # ensure regular dict (not OrderedDict)
+
+    return listings   
+
     # Do not modify this code
     # This opens the CSV and saves it as a list of lists
     base_path = os.path.abspath(os.path.dirname(__file__))
