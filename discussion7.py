@@ -40,7 +40,7 @@ def load_listings(f):
     full_path = os.path.join(base_path, f)
 
     # TODO: Read the CSV using csv.reader and convert it to a list a dictionaries
-    pass
+    #pass
 
 ###############################################################################
 ##### TASK 2: CALCULATION FUNCTION (single calculation)
@@ -60,7 +60,55 @@ def calculate_avg_price_by_neighbourhood_group_and_room(listings):
         dict mapping (neighbourhood_group, room_type) -> average_price (float)
         e.g. { ('Downtown', 'Entire home/apt'): 123.45, ... }
     """
-    pass
+    totals = {}
+    counts = {}
+
+    # Go through each listing one by one
+    for listing in listings:
+
+        # Get the neighbourhood group
+        neighbourhood_group = listing["neighbourhood_group"]
+
+        # Get the room type
+        room_type = listing["room_type"]
+
+        # Get the price (as string)
+        price_string = listing["price"]
+
+        # If price is empty, skip this listing
+        if price_string == "":
+            continue
+
+        # Convert price to float
+        price = float(price_string)
+
+        # Create a key using a tuple
+        key = (neighbourhood_group, room_type)
+
+        # If we have not seen this key before, create entries
+        if key not in totals:
+            totals[key] = 0
+            counts[key] = 0
+
+        # Add price to total
+        totals[key] = totals[key] + price
+
+        # Increase count
+        counts[key] = counts[key] + 1
+
+    # Now calculate averages
+    averages = {}
+
+    for key in totals:
+        total_price = totals[key]
+        number_of_listings = counts[key]
+
+        average_price = total_price / number_of_listings
+
+        averages[key] = average_price
+
+    return averages    
+    #pass
 
 
 
@@ -82,7 +130,21 @@ def write_summary_csv(out_filename, avg_prices):
         None
             Writes a CSV file with header: neighbourhood_group, room_type, average_price
     """
-    pass
+    with open(out_filename, "w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+
+        # Write header row
+        writer.writerow(["neighbourhood_group", "room_type", "average_price"])
+
+        # Go through each key in the dictionary
+        for key in avg_prices:
+            neighbourhood_group = key[0]
+            room_type = key[1]
+            average_price = avg_prices[key]
+
+            # Write one row to the CSV
+            writer.writerow([neighbourhood_group, room_type, average_price])
+    #pass
 
 ###############################################################################
 ##### UNIT TESTS (Do not modify the code below!)
